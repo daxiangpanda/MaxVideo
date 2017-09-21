@@ -46,9 +46,8 @@ typedef void(^CompProgressBlcok)(CGFloat progress);
 - (void)splitVideo:(NSURL *)fileUrl fps:(float)fps splitCompleteBlock:(SplitCompleteBlock) splitCompleteBlock;
 
 
-- (void)createBlackVideo:(NSString*)videoFullPath
-                    size:(CGSize)size
-                    time:(CMTime)time
+- (void)createBlackVideo:(CGSize)size
+                    time:(CGFloat)time
                      fps:(int32_t)fps
       progressImageBlock:(CompProgressBlcok)processImageBlock
           completedBlock:(CompCompletedBlock)completeBlock;

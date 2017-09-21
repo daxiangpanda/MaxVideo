@@ -57,15 +57,16 @@
     
     // 产生一定时长 的黑色视频
 //    NSString *path = [directryPath stringByAppendingPathComponent:@"blackVideo"];
-    NSFileManager *fileManager  = [NSFileManager defaultManager];
-    NSArray *sandboxPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    [fileManager removeItemAtPath:[sandboxPaths.firstObject stringByAppendingPathComponent:@"MovieExport"] error:nil];
-    [[HandlerVideo sharedInstance] createBlackVideo:path size:CGSizeMake(720, 720) time:CMTimeMake(45, 30)
-fps:30 progressImageBlock:nil completedBlock:^(BOOL success) {
+
+    [[HandlerVideo sharedInstance] createBlackVideo:CGSizeMake(720, 720) time:1.5 fps:30 progressImageBlock:^(CGFloat progress) {
+                                                    NSLog(@"%f",progress);
+                                                } completedBlock:^(BOOL success) {
     if(success){
         NSLog(@"success!");
     }
 }];
+    
+    
 }
 
 

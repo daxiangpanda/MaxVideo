@@ -46,21 +46,25 @@ static HandlerVideo *instance = nil;
 
 #pragma mark - create single color video with size time fps color
 
-- (void)createBlackVideo:(NSString*)videoFullPath
-                    size:(CGSize)size
-                    time:(CMTime)time
+- (void)createBlackVideo:(CGSize)size
+                    time:(CGFloat)time
                      fps:(int32_t)fps
       progressImageBlock:(CompProgressBlcok)processImageBlock
           completedBlock:(CompCompletedBlock)completeBlock {
-    if([[NSFileManager defaultManager] fileExistsAtPath:videoFullPath]) {
-//        [[NSFileManager defaultManager] removeItemAtPath:videoFullPath error:nil];
+    
+    NSString *videoName = [NSString stringWithFormat:@"blackVideo%.0f*%.0f %.2fs.mp4",size.width,size.height,time];
+    NSArray *sandboxPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString* path = [sandboxPaths.firstObject stringByAppendingPathComponent:videoName];
+    NSLog(@"%@",path);
+    if([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         //如果视频存在的话，不用再生产
+        NSLog(@"空视频%@存在",videoName);
         return;
     }
     
     NSError *error = nil;
     
-    AVAssetWriter *videoWriter = [[AVAssetWriter alloc] initWithURL:[NSURL fileURLWithPath:videoFullPath] fileType:AVFileTypeQuickTimeMovie error:&error];
+    AVAssetWriter *videoWriter = [[AVAssetWriter alloc] initWithURL:[NSURL fileURLWithPath:path] fileType:AVFileTypeQuickTimeMovie error:&error];
     
     NSParameterAssert(videoWriter);
     if(error)
@@ -83,7 +87,8 @@ static HandlerVideo *instance = nil;
     [videoWriter startSessionAtSourceTime:kCMTimeZero];
     dispatch_queue_t dispatchQueue = dispatch_queue_create("mediaInputQueue", DISPATCH_QUEUE_SERIAL);
     __block int frame = -1;
-    NSInteger count = time.value;
+//    CMTime cmtime = CMTimeMake(fps*time, fps);
+    NSInteger count = fps*time;
     
     [writerInput requestMediaDataWhenReadyOnQueue:dispatchQueue usingBlock:^{
         while ([writerInput isReadyForMoreMediaData]) {
