@@ -1,3 +1,13 @@
+片尾水印流程：
+根据视频大小生成一个定长的黑视频存储在本地，如果本地已经有了这个视频，那么取出本地的视频使用。视频可能有多个分辨率，用文件名区分。
+取到空视频之后 再取视频的最后一帧 使用混合滤镜将最后一帧和黑视频的每一帧混合。
+然后再将模糊滤镜和水印滤镜加上，最终生成片尾滤镜视频。
+最后再将片尾滤镜视频和正片视频合并，导出最终的视频。
+取视频的最后一帧使用UIImage的一个类方法 thumbImage
+
++ (UIImage *_Nullable)thumbnailImageForVideo:(NSURL *_Nonnull)videoURL atTime:(NSTimeInterval)time 
+
+
 ## MaxVideo
 多张图片合成视频；多个小视频合成大视频
 
