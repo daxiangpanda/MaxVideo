@@ -29,6 +29,97 @@ static HandlerVideo *instance = nil;
     return [HandlerVideo sharedInstance];
 }
 
+
+
+#pragma mark - create black image with size
+- (UIImage *)createImageWithSize:(CGSize)size {
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+    CGContextFillRect(context, rect);
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
+}
+
+
+#pragma mark - create single color video with size time fps color
+
+- (void)createBlackVideo:(NSString*)videoFullPath
+                    size:(CGSize)size
+                    time:(CMTime)time
+                     fps:(int32_t)fps
+      progressImageBlock:(CompProgressBlcok)processImageBlock
+          completedBlock:(CompCompletedBlock)completeBlock {
+    if([[NSFileManager defaultManager] fileExistsAtPath:videoFullPath]) {
+//        [[NSFileManager defaultManager] removeItemAtPath:videoFullPath error:nil];
+        //如果视频存在的话，不用再生产
+        return;
+    }
+    
+    NSError *error = nil;
+    
+    AVAssetWriter *videoWriter = [[AVAssetWriter alloc] initWithURL:[NSURL fileURLWithPath:videoFullPath] fileType:AVFileTypeQuickTimeMovie error:&error];
+    
+    NSParameterAssert(videoWriter);
+    if(error)
+        NSLog(@"error = %@", [error localizedDescription]);
+    
+    UIImage *img = [self createImageWithSize:size];
+    
+    NSDictionary *videoSettings = [NSDictionary dictionaryWithObjectsAndKeys:AVVideoCodecH264, AVVideoCodecKey,
+                                   [NSNumber numberWithInt:size.width], AVVideoWidthKey,
+                                   [NSNumber numberWithInt:size.height], AVVideoHeightKey, nil];
+    AVAssetWriterInput *writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
+    
+    NSDictionary *sourcePixelBufferAttributesDictionary = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kCVPixelFormatType_32ARGB], kCVPixelBufferPixelFormatTypeKey, nil];
+    
+    AVAssetWriterInputPixelBufferAdaptor *adaptor = [AVAssetWriterInputPixelBufferAdaptor
+                                                     assetWriterInputPixelBufferAdaptorWithAssetWriterInput:writerInput sourcePixelBufferAttributes:sourcePixelBufferAttributesDictionary];
+    [videoWriter addInput:writerInput];
+    
+    [videoWriter startWriting];
+    [videoWriter startSessionAtSourceTime:kCMTimeZero];
+    dispatch_queue_t dispatchQueue = dispatch_queue_create("mediaInputQueue", DISPATCH_QUEUE_SERIAL);
+    __block int frame = -1;
+    NSInteger count = time.value;
+    
+    [writerInput requestMediaDataWhenReadyOnQueue:dispatchQueue usingBlock:^{
+        while ([writerInput isReadyForMoreMediaData]) {
+            if(++frame >= count) {
+                [writerInput markAsFinished];
+                [videoWriter finishWriting];
+                printf("comp completed\n");
+                if (completeBlock) {
+                    completeBlock(YES);
+                }
+                break;
+            }
+            
+            CVPixelBufferRef buffer = NULL;
+            UIImage *currentFrameImg = img;
+            buffer = (CVPixelBufferRef)[self pixelBufferFromCGImage:[currentFrameImg CGImage] size:size];
+            if (processImageBlock) {
+                CGFloat progress = frame * 1.0 / count;
+                processImageBlock(progress);
+            }
+            if (buffer) {
+                if(![adaptor appendPixelBuffer:buffer withPresentationTime:CMTimeMake(frame, fps)]) {
+                    NSLog(@"FAIL");
+                    if (completeBlock) {
+                        completeBlock(NO);
+                    }
+                } else {
+                    CFRelease(buffer);
+                }
+            }
+        }
+    }];
+
+
+}
+
 #pragma mark - Method
 - (void)composesVideoFullPath:(NSString *)videoFullPath
                frameImgs:(NSArray<UIImage *> *)frameImgs
@@ -39,6 +130,7 @@ static HandlerVideo *instance = nil;
         [[NSFileManager defaultManager] removeItemAtPath:videoFullPath error:nil];
     }
 
+//    UIImage *blackImage = [UIImage ima]
     NSError *error = nil;
     AVAssetWriter *videoWriter = [[AVAssetWriter alloc] initWithURL:[NSURL fileURLWithPath:videoFullPath]
                                                            fileType:AVFileTypeQuickTimeMovie

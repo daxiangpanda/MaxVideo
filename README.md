@@ -5,6 +5,8 @@
 最后再将片尾滤镜视频和正片视频合并，导出最终的视频。
 取视频的最后一帧使用UIImage的一个类方法 thumbImage
 
+另一种思路是在片尾截取1.5s的视频
+
 + (UIImage *_Nullable)thumbnailImageForVideo:(NSURL *_Nonnull)videoURL atTime:(NSTimeInterval)time 
 
 

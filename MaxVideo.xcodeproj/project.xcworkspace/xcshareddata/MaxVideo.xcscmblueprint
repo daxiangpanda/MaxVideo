@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "8CEA000043B178EA6F5D92F84BA153348C36C3EA",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "8CEA000043B178EA6F5D92F84BA153348C36C3EA" : 9223372036854775807,
+    "FF4B0458BBB95CA7FE838785756F4E863B550287" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "FC2E92CC-403F-40DD-942D-ADE2C1AD4FA5",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "8CEA000043B178EA6F5D92F84BA153348C36C3EA" : "MaxVideo\/",
+    "FF4B0458BBB95CA7FE838785756F4E863B550287" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "MaxVideo",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "MaxVideo.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/daxiangpanda\/MaxVideo.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8CEA000043B178EA6F5D92F84BA153348C36C3EA"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:daxiangpanda\/video.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "FF4B0458BBB95CA7FE838785756F4E863B550287"
+    }
+  ]
+}

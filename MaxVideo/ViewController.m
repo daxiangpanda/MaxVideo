@@ -24,19 +24,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // 合并视频 (注：将视频导出路径设置为桌面方便测试，实际开发存入沙盒即可)
-    NSString *path1 = [[NSBundle mainBundle] pathForResource:@"video1" ofType:@"mp4"];
-    NSString *path2 = [[NSBundle mainBundle] pathForResource:@"video2" ofType:@"mp4"];
-    self.conbineVideos = [NSMutableArray arrayWithObjects:path1,path2,nil];
-    NSLog(@"%@",kCombineVideo);
-    
-    [[HandlerVideo sharedInstance] combinationVideosWithVideoPath:self.conbineVideos videoFullPath:@"/Users/VS/Desktop/video.mp4" completedBlock:^(BOOL success, NSString *errorMsg) {
-        if (success) {
-            NSLog(@"---->  SUCCESS");
-        } else {
-            NSLog(@"---->> %@",errorMsg);
-        }
-    }];
+//    // 合并视频 (注：将视频导出路径设置为桌面方便测试，实际开发存入沙盒即可)
+//    NSString *path1 = [[NSBundle mainBundle] pathForResource:@"video1" ofType:@"mp4"];
+//    NSString *path2 = [[NSBundle mainBundle] pathForResource:@"video2" ofType:@"mp4"];
+//    self.conbineVideos = [NSMutableArray arrayWithObjects:path1,path2,nil];
+//    NSLog(@"%@",kCombineVideo);
+//    
+//    [[HandlerVideo sharedInstance] combinationVideosWithVideoPath:self.conbineVideos videoFullPath:@"/Users/VS/Desktop/video.mp4" completedBlock:^(BOOL success, NSString *errorMsg) {
+//        if (success) {
+//            NSLog(@"---->  SUCCESS");
+//        } else {
+//            NSLog(@"---->> %@",errorMsg);
+//        }
+//    }];
 
     
 /************************************************************************/
@@ -53,6 +53,11 @@
 //            NSLog(@"---> splitimgs个数:%lu",(unsigned long)splitimgs.count);
 //        }
 //    }];
+    
+    // 产生一定时长 的黑色视频
+    NSString *path = [[NSBundle mainBundle]pathForResource:@"blackVideo" ofType:@"mp4"];
+    
+    [HandlerVideo sharedInstance] 
 }
 
 
